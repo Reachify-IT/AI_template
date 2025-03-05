@@ -15,3 +15,4 @@ pytest-shutil
 langchain_core
 requests
 tiktoken
+moviepy

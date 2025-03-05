@@ -16,6 +16,8 @@ COPY . .
 # Ensure Uvicorn is installed
 RUN pip install uvicorn
 
+RUN pip install imageio[ffmpeg] imageio-ffmpeg
+
 # Expose the port used by Uvicornnnn
 EXPOSE 8000
 
