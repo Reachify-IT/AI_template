@@ -1,4 +1,5 @@
 fastapi
+uvicorn
 ollama
 langchain
 langchain_community

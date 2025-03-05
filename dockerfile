@@ -5,13 +5,16 @@ FROM python:3.10
 WORKDIR /app
 
 # Copy Python requirements file
-COPY requirements.txt ./
+COPY requirements.txt .
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy the entire project
 COPY . .
+
+# Ensure Uvicorn is installed
+RUN pip install uvicorn
 
 # Expose the port used by Uvicorn
 EXPOSE 8000
