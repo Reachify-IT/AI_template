@@ -38,7 +38,7 @@ def process_email(data: RequestData):
         logger.info("Client website analysis completed")
 
         # Analyzing video issues
-        client_website_issue = process_video(data.video_path, "local")
+        client_website_issue = process_video(data.video_path)
         logger.info(f"Processed video analysis: {client_website_issue}")
 
         # Training initial model
