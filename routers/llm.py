@@ -120,6 +120,7 @@ def process_video(video_source, source_type="local", model_size="base"):
     # # elif source_type == "drive":
     # #     video_path = download_drive_video(video_source)
     # else:
+    # just in case
 
     
     video_path = download_video(video_source)
