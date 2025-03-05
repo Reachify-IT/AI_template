@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from routers import email
+import asyncio  # ✅ Import asyncio
 
 app = FastAPI()
 
@@ -17,6 +18,10 @@ app.add_middleware(
 app.include_router(email.router, prefix="/api")
 
 @app.get("/")
-def home():
+async def home():  # ✅ Make it async to prevent blocking
     return {"message": "Welcome to the Email Processing API"}
 
+# ✅ Ensure FastAPI runs in an event loop to prevent hanging
+if __name__ == "__main__":
+    import uvicorn
+    asyncio.run(uvicorn.run(app, host="127.0.0.1", port=8000, log_level="debug"))

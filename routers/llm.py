@@ -58,20 +58,22 @@ app = FastAPI()
 
 def reset_chroma():
     try:
-        # Properly close any existing ChromaDB instances
+        # Close any existing ChromaDB instances
         client = chromadb.PersistentClient(path=CHROMA_DB_PATH)
-        client.delete_collection("rag-chroma")  # Remove collection instead of full reset
+        client.delete_collection("rag-chroma")
         del client  # Release resources
-    except Exception as e:
-        print(f"ChromaDB Error: {e}")
 
-    # Ensure ChromaDB folder is deleted
-    if os.path.exists(CHROMA_DB_PATH):
-        try:
+        # Ensure files are closed before deleting
+        import time
+        time.sleep(2)  # Wait for 2 seconds
+
+        # Delete the database folder
+        if os.path.exists(CHROMA_DB_PATH):
             shutil.rmtree(CHROMA_DB_PATH)
-            print("ChromaDB directory deleted successfully.")
-        except Exception as e:
-            print(f"Error deleting ChromaDB directory: {e}")
+            print("✅ ChromaDB directory deleted successfully.")
+    except Exception as e:
+        print(f"⚠️ ChromaDB Error: {e}")
+
 
 
 reset_chroma()  # Call function before initializing the database
@@ -94,7 +96,7 @@ def extract_audio(video_path, audio_path="temp_audio.wav"):
     return audio_path
 
 
-def transcribe_audio(audio_path, model_size="medium"):  # Change model to "medium"
+def transcribe_audio(audio_path, model_size="tiny"):  # Change model to "medium"
     model = whisper.load_model(model_size)
     result = model.transcribe(audio_path, language="en")
     return result["text"]
