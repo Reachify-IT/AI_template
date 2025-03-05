@@ -12,9 +12,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Build and run Docker container
+      - name: Pull latest Docker image
         run: |
-          docker build -t my-python-app .
-          docker stop my-python-app || true
-          docker rm my-python-app || true
-          docker run -d --name my-python-app -p 8000:8000 my-python-app
+          docker pull abhinavdogra003768/llm:latest
+
+      - name: Stop and remove existing container (if running)
+        run: |
+          docker stop llm-container || true
+          docker rm llm-container || true
+
+      - name: Run the new container
+        run: |
+          docker run -d --name llm-container -p 8000:8000 abhinavdogra003768/llm:latest
