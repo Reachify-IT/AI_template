@@ -3,6 +3,8 @@ import os
 import re
 import shutil
 import ollama
+import requests
+import tempfile
 import chromadb
 from pydantic import BaseModel
 from fastapi import FastAPI, HTTPException
@@ -85,7 +87,17 @@ reset_chroma()  # Call function before initializing the database
 
 
 
-
+def download_video(url):
+    """Download video from a direct URL and save it locally."""
+    response = requests.get(url, stream=True)
+    if response.status_code == 200:
+        temp_file = tempfile.NamedTemporaryFile(delete=False, suffix=".mp4")
+        with open(temp_file.name, "wb") as f:
+            for chunk in response.iter_content(chunk_size=1024):
+                f.write(chunk)
+        return temp_file.name
+    else:
+        raise Exception(f"Failed to download video from URL: {url}")
 
 def extract_audio(video_path, audio_path="temp_audio.wav"):
     clip = VideoFileClip(video_path)
@@ -96,7 +108,7 @@ def extract_audio(video_path, audio_path="temp_audio.wav"):
     return audio_path
 
 
-def transcribe_audio(audio_path, model_size="tiny"):  # Change model to "medium"
+def transcribe_audio(audio_path, model_size="base"):  # Change model to "medium"
     model = whisper.load_model(model_size)
     result = model.transcribe(audio_path, language="en")
     return result["text"]
@@ -108,7 +120,10 @@ def process_video(video_source, source_type="local", model_size="base"):
     # # elif source_type == "drive":
     # #     video_path = download_drive_video(video_source)
     # else:
-    video_path = video_source  # Local file
+
+    
+    video_path = download_video(video_source)
+    # video_path = video_source  # Local file
 
     audio_path = extract_audio(video_path)
     # st.audio(audio_path, format="audio/wav")

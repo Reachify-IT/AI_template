@@ -5,7 +5,7 @@ langchain
 langchain_community
 proglog
 chromadb
-whisper
+openai-whisper
 imageio
 imageio_ffmpeg
 decorator
@@ -13,3 +13,5 @@ asyncio
 regex
 pytest-shutil
 langchain_core
+requests
+tiktoken
