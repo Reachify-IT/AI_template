@@ -16,7 +16,7 @@ COPY . .
 # Ensure Uvicorn is installed
 RUN pip install uvicorn
 
-# Expose the port used by Uvicorn
+# Expose the port used by Uvicornnnn
 EXPOSE 8000
 
 # Start the Python application using Uvicorn
