@@ -6,3 +6,4 @@ langchain_community
 proglog
 chromadb
 whisper
+imageio
