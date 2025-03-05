@@ -8,3 +8,9 @@ chromadb
 whisper
 imageio
 imageio_ffmpeg
+decorator
+asyncio
+regex
+logging
+pytest-shutil
+langchain_core
