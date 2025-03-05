@@ -18,7 +18,8 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain.text_splitter import CharacterTextSplitter
 from langchain_community.document_loaders import WebBaseLoader
 
-
+import imageio
+imageio.plugins.ffmpeg.download()
 
 
 import whisper
