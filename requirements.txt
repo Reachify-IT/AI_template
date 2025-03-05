@@ -4,3 +4,4 @@ ollama
 langchain
 langchain_community
 proglog
+chromadb
