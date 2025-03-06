@@ -52,7 +52,7 @@ RUN pip install imageio[ffmpeg] imageio-ffmpeg
 # Install Ollama inside the container
 RUN curl -fsSL https://ollama.ai/install.sh | sh
 
-RUN  ollama run llama3
+RUN  ollama pull llama3
 # Copy application files
 COPY . .
 
