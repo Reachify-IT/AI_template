@@ -25,7 +25,7 @@ import whisper
 # from moviepy.editor import VideoFileClip
 from moviepy.video.io.VideoFileClip import VideoFileClip
 
-os.environ["OLLAMA_HOST"] = "http://172.31.46.239:11434"
+# os.environ["OLLAMA_HOST"] = "http://172.31.46.239:11434"
 
 
 CHROMA_DB_PATH = "./chromaa_db"
