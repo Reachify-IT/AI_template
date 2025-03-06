@@ -24,4 +24,4 @@ async def home():  # ✅ Make it async to prevent blocking
 # ✅ Ensure FastAPI runs in an event loop to prevent hanging
 if __name__ == "__main__":
     import uvicorn
-    asyncio.run(uvicorn.run(app, host="65.2.31.208", port=8000, log_level="debug"))
+    asyncio.run(uvicorn.run(app, host="13.201.48.163", port=8000, log_level="debug"))
