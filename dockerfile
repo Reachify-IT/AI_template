@@ -26,4 +26,3 @@ RUN chmod +x /entrypoint.sh
 
 # Start Ollama and FastAPI with parallel processing
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "4"]
-

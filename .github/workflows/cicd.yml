@@ -1,9 +1,9 @@
-name: Deploy FastAPI on AWS
+name: Deploy Node Application
 
-on:
+on: 
   push:
     branches:
-      - main  # Change this if needed
+      - main
 
 jobs:
   build:
@@ -22,25 +22,25 @@ jobs:
         run: docker push abhinavdogra003768/llm:latest 
 
   deploy:
-    runs-on: self-hosted  # Use self-hosted runner instead of SSH
+    needs: build
+    runs-on: self-hosted 
     steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
+      - name: Pull latest image from Docker Hub
+        run: docker pull abhinavdogra003768/llm:latest 
 
-      - name: Deploy FastAPI Docker Container
+      - name: Remove old container
+        run: docker rm -f llm-container || true  
+
+      - name: Cleanup unused images
+        run: docker system prune -f
+
+      - name: Run new Docker Container
         run: |
-          # Pull the latest Docker image
-          docker pull abhinavdogra003768/llm:latest 
+          docker run -d --restart unless-stopped -p 8000:8000 --name llm-container \
+            abhinavdogra003768/llm:latest
 
-          # Stop and remove old container if it exists
-          docker stop llm-container || true
-          docker rm llm-container || true
 
-          # Cleanup unused Docker images
-          docker system prune -f
 
-          # Run the new container
-          docker run -d -p 8000:8000 --name llm-container abhinavdogra003768/llm:latest
 
-          # Show running containers
-          docker ps
+
+
