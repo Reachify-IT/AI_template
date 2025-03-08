@@ -6,7 +6,7 @@ export OLLAMA_CUDA=1  # Enable GPU for Ollama
 echo "Starting Ollama with GPU support..."
 nohup ollama serve --host=0.0.0.0:11434 > ollama.log 2>&1 &
 
-# Wait for Ollama to be ready globally
+# Wait for Ollama to be ready globallyss
 (
     until curl -s http://0.0.0.0:11434/api > /dev/null; do
         echo "Waiting for Ollama to start..."
