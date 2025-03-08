@@ -7,7 +7,7 @@ WORKDIR /app
 # Prevent APT from asking for user input
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Install Python, FFmpeg, Curl, and dependencies
+# Install Python, FFmpeg, Curl, and other dependencies
 RUN apt update && apt install -y \
     python3.10 python3.10-venv python3.10-dev python3-pip \
     curl ffmpeg git && \
