@@ -1,6 +1,6 @@
-name: Deploy Node Application
+name: Deploy Python LLM API
 
-on: 
+on:
   push:
     branches:
       - main
@@ -9,38 +9,32 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout Source
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
       - name: Login to Docker Hub
         run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin    
 
       - name: Build Docker Image
-        run: docker build -t abhinavdogra003768/llm .
+        run: docker build -t mydockerhubuser/my-llm-app .
 
-      - name: Publish Image to Docker Hub
-        run: docker push abhinavdogra003768/llm:latest 
+      - name: Push Image to Docker Hub
+        run: docker push mydockerhubuser/my-llm-app:latest
 
   deploy:
     needs: build
-    runs-on: self-hosted 
+    runs-on: self-hosted  # Ensure an EC2 runner is set up
     steps:
-      - name: Pull latest image from Docker Hub
-        run: docker pull abhinavdogra003768/llm:latest 
+      - name: Pull Latest Docker Image
+        run: docker pull mydockerhubuser/my-llm-app:latest
 
-      - name: Remove old container
-        run: docker rm -f llm-container || true  
+      - name: Stop Old Container
+        run: docker rm -f llm-container || true
 
-      - name: Cleanup unused images
+      - name: Cleanup Docker
         run: docker system prune -f
 
-      - name: Run new Docker Container
+      - name: Run New Container with GPU Support
         run: |
-          docker run -d --restart unless-stopped -p 8000:8000 --name llm-container \
-            abhinavdogra003768/llm:latest
-
-
-
-
-
-
+          docker run -d --gpus all -p 8000:8000 -p 11434:11434 --restart unless-stopped --name llm-container \
+            mydockerhubuser/my-llm-app:latest

@@ -1,29 +1,22 @@
-# Use a base Python image
-FROM python:3.10
+# Use NVIDIA CUDA image with Python 3.10
+FROM nvidia/cuda:12.1.1-runtime-ubuntu22.04
 
-# Set the working directory inside the container
+# Set working directory
 WORKDIR /app
 
-# Install dependencies in one step to leverage caching
-COPY requirements.txt .
-RUN pip install -r requirements.txt\
-    pip install --no-cache-dir -r requirements.txt && \
-    pip install uvicorn && \
-    apt update && apt install -y ffmpeg && \
-    pip install imageio[ffmpeg] imageio-ffmpeg
+# Install Python 3.10 and dependencies
+RUN apt update && apt install -y \
+    python3.10 python3.10-venv python3.10-dev python3-pip curl && \
+    python3.10 -m ensurepip && \
+    ln -s /usr/bin/python3.10 /usr/bin/python3 && \
+    pip install --no-cache-dir --upgrade pip && \
+    pip install --no-cache-dir -r requirements.txt
 
-# Install Ollama inside the container
-RUN curl -fsSL https://ollama.ai/install.sh | sh
-
-# Copy application files
+# Copy project files
 COPY . .
 
-# Expose necessary ports
-EXPOSE 8000
+# Expose API & Ollama ports
+EXPOSE 8000 11434
 
-# Copy the entrypoint script and make it executable
-COPY entrypoint.sh /entrypoint.sh
-RUN chmod +x /entrypoint.sh
-
-# Start Ollama and FastAPI with parallel processing
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "4"]
+# Set entrypoint
+ENTRYPOINT ["/bin/bash", "entrypoint.sh"]
