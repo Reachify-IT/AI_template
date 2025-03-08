@@ -7,12 +7,15 @@ WORKDIR /app
 # Prevent APT from asking for user input
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Update and install dependencies (including FFmpeg)
+# Install Python, FFmpeg, Curl, and dependencies
 RUN apt update && apt install -y \
-    python3.10 python3.10-venv python3.10-dev python3-pip curl ffmpeg \
-    && ln -sf /usr/bin/python3.10 /usr/bin/python3 \
-    && python3 -m pip install --no-cache-dir --upgrade pip \
-    && apt clean && rm -rf /var/lib/apt/lists/*
+    python3.10 python3.10-venv python3.10-dev python3-pip \
+    curl ffmpeg git && \
+    ln -sf /usr/bin/python3.10 /usr/bin/python3 && \
+    python3 -m pip install --no-cache-dir --upgrade pip 
+
+# Install Ollama inside the container
+RUN curl -fsSL https://ollama.ai/install.sh | sh
 
 # Copy project files
 COPY . .
@@ -20,7 +23,7 @@ COPY . .
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Expose ports for API & Ollama
+# Expose FastAPI and Ollama ports
 EXPOSE 8000 11434
 
 # Set entrypoint
