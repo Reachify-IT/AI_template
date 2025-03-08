@@ -18,7 +18,7 @@ from langchain_core.output_parsers import StrOutputParser
 from langchain.text_splitter import CharacterTextSplitter
 from langchain_community.document_loaders import WebBaseLoader
 
-
+import requests
 
 import whisper
 # from moviepy import *
@@ -240,15 +240,15 @@ Use the following **context**:
 **Tone**: Conversational, yet professional. Make it feel like a **helpful, friendly expert reaching out**, not a hard sales pitch.  
 
 **Your task:**  
-📌 Generate **both a subject line** and **a full email body**.  
+Generate **both a subject** and **a full email body**.  
 
 **Structure:**  
-1️⃣ **Subject Line**:  
+1️ **Subject Line**:  
    - Must be attention-grabbing but **not clickbait**.  
    - Should immediately highlight value or relevance.  
    - Keep it **short and engaging** (max 10 words).  
 
-2️⃣ **Email Body**:  
+2️ **Email Body**:  
   - **Opening**: Personal, warm, and engaging. Show you did your research.  
   - **Pain Points**: Highlight the company’s challenges in a **human** way.  
   - **Solution**: Clearly explain how {my_company} and {my_work} can **fix the problem**.  
@@ -479,7 +479,7 @@ I’ve helped other businesses **upgrade without disrupting operations**, and I�
 
 def train_model_2(my_company, my_designation, my_name, my_mail, my_work, client_name, client_company,
                   client_designation, client_mail, client_website, client_website_issue, client_about_website,
-                  my_cta_link, my_body_text):
+                  my_cta_link, my_body_text, video_path):
     system_prompt_1 = f"""You are an expert in generating precise, structured, and visually appealing **HTML email**. Your primary task is to **convert the provided email body text (`{my_body_text}`) into a clean, responsive HTML email** with proper formatting while ensuring no alterations to the content.
 
     ### **User Inputs:**
@@ -490,7 +490,7 @@ def train_model_2(my_company, my_designation, my_name, my_mail, my_work, client_
       - Email: {my_mail}
       - Work Type: {my_work}
       - CTA Link: {my_cta_link}
-
+      - Video Path: {video_path}
     - **Recipient Details**:
       - Name: {client_name}
       - Designation: {client_designation}
@@ -516,6 +516,7 @@ def train_model_2(my_company, my_designation, my_name, my_mail, my_work, client_
        - Use **inline CSS** to maintain compatibility across different email clients.
 
     3. **Call-to-Action (CTA)**:
+       - If `{video_path}` is provided, include a **visually clear button** styled for engagement.
        - If `{my_cta_link}` is provided, include a **visually clear button** styled for engagement.
        - The CTA **should match the intent of `{my_body_text}`** without modifying its wording.
 
@@ -576,6 +577,13 @@ def train_model_2(my_company, my_designation, my_name, my_mail, my_work, client_
             <li><strong>Design inconsistencies</strong> – A few areas could be refined for better branding.</li>
             <li><strong>Contact info placement</strong> – Making it clearer could boost leads.</li>
         </ul>
+
+        <p>I've created a short video explaining the possible improvements. You can watch it below:</p>
+
+        <div style="text-align: center;">
+            
+            <p><a href="{video_path}" class="button">🎥 Watch Video</a></p>
+        </div>
 
         <p>I'd love to collaborate with you and help improve these aspects. Let’s explore some **quick and actionable solutions** tailored for {client_company}.</p>
 
@@ -638,6 +646,13 @@ def train_model_2(my_company, my_designation, my_name, my_mail, my_work, client_
             <li>🎨 **Refined design elements** for brand consistency</li>
             <li>📞 **Better contact placement** to increase conversions</li>
         </ul>
+
+        <p>I've created a short video explaining the possible improvements. You can watch it below:</p>
+
+        <div style="text-align: center;">
+            
+            <p><a href="{video_path}" class="cta-button">🎥 Watch Video</a></p>
+        </div>
 
         <p>I’d love to share some quick strategies that can **deliver results without disrupting your current setup.**</p>
 
@@ -702,6 +717,15 @@ def train_model_2(my_company, my_designation, my_name, my_mail, my_work, client_
             <li>📞 **Contact Form Fixes** – Make it easier for leads to reach you</li>
         </ul>
 
+        
+        <p>I've created a short video explaining the possible improvements. You can watch it below:</p>
+
+        <div style="text-align: center;">
+            
+            <p><a href="{video_path}" class="cta-button">🎥 Watch Video</a></p>
+        </div>
+
+
         <p>Let’s make **small changes for big results**! I’d love to share how we can get started.</p>
 
         <a href="{my_cta_link}" class="cta-button">Let’s Optimize Together</a>
@@ -762,7 +786,17 @@ def train_model_2(my_company, my_designation, my_name, my_mail, my_work, client_
             <li>✔️ Improved contact forms **for more leads**</li>
         </ul>
 
+        
+        <p>I've created a short video explaining the possible improvements. You can watch it below:</p>
+
+        <div style="text-align: center;">
+            
+            <p><a href="{video_path}" class="cta-button">🎥 Watch Video</a></p>
+        </div>
+
         <p>Let’s chat about **simple, high-impact changes** that can help {client_company} thrive online.</p>
+
+        
 
         <a href="{my_cta_link}" class="cta-button">Let’s Connect & Improve</a>
 

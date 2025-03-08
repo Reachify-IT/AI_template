@@ -4,13 +4,12 @@ FROM python:3.10
 # Set the working directory inside the container
 WORKDIR /app
 
-# Install dependencies
+# Install dependencies in one step to leverage caching
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-RUN pip install uvicorn
-RUN apt update && apt install -y ffmpeg
-RUN pip install imageio[ffmpeg] imageio-ffmpeg
+RUN pip install --no-cache-dir -r requirements.txt && \
+    pip install uvicorn && \
+    apt update && apt install -y ffmpeg && \
+    pip install imageio[ffmpeg] imageio-ffmpeg
 
 # Install Ollama inside the container
 RUN curl -fsSL https://ollama.ai/install.sh | sh
@@ -25,5 +24,5 @@ EXPOSE 8000
 COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
-# Start Ollama and FastAPI using the entrypoint script
-ENTRYPOINT ["/entrypoint.sh"]
+# Start Ollama and FastAPI with parallel processing
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "4"]
