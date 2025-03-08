@@ -14,7 +14,6 @@ RUN pip install --no-cache-dir -r requirements.txt && \
 # Install Ollama inside the container
 RUN curl -fsSL https://ollama.ai/install.sh | sh
 
-RUN ollama pull llama3
 # Copy application files
 COPY . .
 
