@@ -6,7 +6,8 @@ WORKDIR /app
 
 # Install dependencies in one step to leverage caching
 COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt && \
+RUN pip install -r requirements.txt\
+    pip install --no-cache-dir -r requirements.txt && \
     pip install uvicorn && \
     apt update && apt install -y ffmpeg && \
     pip install imageio[ffmpeg] imageio-ffmpeg
