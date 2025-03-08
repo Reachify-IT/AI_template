@@ -14,6 +14,7 @@ RUN pip install --no-cache-dir -r requirements.txt && \
 # Install Ollama inside the container
 RUN curl -fsSL https://ollama.ai/install.sh | sh
 
+RUN ollama pull llama3
 # Copy application files
 COPY . .
 
@@ -25,4 +26,5 @@ COPY entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
 # Start Ollama and FastAPI with parallel processing
-CMD ["uvicorn", "main:app", "--host", "65.2.142.99", "--port", "8000", "--workers", "4"]
+CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "4"]
+
