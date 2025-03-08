@@ -22,36 +22,25 @@ jobs:
         run: docker push abhinavdogra003768/llm:latest 
 
   deploy:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted  # Use self-hosted runner instead of SSH
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: SSH into AWS & Deploy
-        uses: appleboy/ssh-action@master
-        with:
-          host: ${{ secrets.AWS_HOST }}
-          username: ${{ secrets.AWS_USER }}
-          key: ${{ secrets.AWS_SSH_KEY }}
-          script: |
-            # Navigate to the app directory (Ensure this path is correct)
-            cd /home/ubuntu/my-fastapi-app
+      - name: Deploy FastAPI Docker Container
+        run: |
+          # Pull the latest Docker image
+          docker pull abhinavdogra003768/llm:latest 
 
-            # Pull the latest changes
-            git pull origin main
+          # Stop and remove old container if it exists
+          docker stop llm-container || true
+          docker rm llm-container || true
 
-            # Pull latest Docker image
-            docker pull abhinavdogra003768/llm:latest 
+          # Cleanup unused Docker images
+          docker system prune -f
 
-            # Stop and remove old container if it exists
-            docker stop llm-container || true
-            docker rm llm-container || true
+          # Run the new container
+          docker run -d -p 8000:8000 --name llm-container abhinavdogra003768/llm:latest
 
-            # Cleanup unused Docker images
-            docker system prune -f
-
-            # Run the new container
-            docker run -d -p 8000:8000 --name llm-container abhinavdogra003768/llm:latest
-
-            # Show running containers
-            docker ps
+          # Show running containers
+          docker ps
