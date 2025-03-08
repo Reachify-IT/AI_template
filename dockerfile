@@ -7,9 +7,9 @@ WORKDIR /app
 # Prevent APT from asking for user input
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Update and install Python 3.10 + dependencies
+# Update and install dependencies (including FFmpeg)
 RUN apt update && apt install -y \
-    python3.10 python3.10-venv python3.10-dev python3-pip curl \
+    python3.10 python3.10-venv python3.10-dev python3-pip curl ffmpeg \
     && ln -sf /usr/bin/python3.10 /usr/bin/python3 \
     && python3 -m pip install --no-cache-dir --upgrade pip \
     && apt clean && rm -rf /var/lib/apt/lists/*
