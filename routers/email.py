@@ -23,7 +23,7 @@ class RequestData(BaseModel):
     client_website: str
     video_path: str
 
-@router.post("/api/process-email")
+@router.post("/process-email")
 def process_email(data: RequestData):
     try:
         # ✅ Extract website information
