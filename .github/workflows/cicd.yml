@@ -21,22 +21,22 @@ jobs:
       - name: Push Image to Docker Hub
         run: docker push abhinavdogra003768/llm:latest
 
-deploy:
-  needs: build
-  runs-on: self-hosted  # This means it's deploying on your EC2 instance
-  steps:
-    - name: Pull Latest Docker Image
-      run: docker pull abhinavdogra003768/llm:latest
+  deploy:
+    needs: build
+    runs-on: self-hosted  # This means it's deploying on your EC2 instance
+    steps:
+      - name: Pull Latest Docker Image
+        run: docker pull abhinavdogra003768/llm:latest
 
-    - name: Stop and Remove Old Container (If Exists)
-      run: |
-        docker stop llm-container || true
-        docker rm llm-container || true
-        docker ps -q --filter "expose=8000" | xargs -r docker stop
-        docker ps -q --filter "expose=11434" | xargs -r docker stop
-        docker system prune -f
+      - name: Stop and Remove Old Container (If Exists)
+        run: |
+          docker stop llm-container || true
+          docker rm llm-container || true
+          docker ps -q --filter "expose=8000" | xargs -r docker stop
+          docker ps -q --filter "expose=11434" | xargs -r docker stop
+          docker system prune -f
 
-    - name: Run New Container with GPU Support
-      run: |
-        docker run -d --gpus all -p 8000:8000 -p 11434:11434 --restart unless-stopped --name llm-container \
-          abhinavdogra003768/llm:latest
+      - name: Run New Container with GPU Support
+        run: |
+          docker run -d --gpus all -p 8000:8000 -p 11434:11434 --restart unless-stopped --name llm-container \
+            abhinavdogra003768/llm:latest
